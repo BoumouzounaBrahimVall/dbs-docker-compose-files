@@ -1,0 +1,37 @@
+version: '3'
+services:
+  # PostgreSQL with PostGIS
+  db:
+    #image: postgis/postgis:16-3.4
+    image: kartoza/postgis:13.0
+    container_name: postgres-postgis
+    environment:
+      POSTGRES_DB: dbname
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "15432:5432"
+    networks:
+      - pg-network
+    volumes:
+      - ./pgdb-data/pg-data:/var/lib/postgresql/data
+
+  # PGAdmin4
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@mail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "15050:80"
+    depends_on:
+      - db
+    networks:
+      - pg-network
+    volumes:
+      - ./pgdb-data/pgadmi-data:/var/lib/pgadmin4/user@mail.com
+
+
+networks:
+  pg-network:
